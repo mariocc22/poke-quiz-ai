@@ -16,7 +16,14 @@ export function ThemeToggle({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
+  //this will receive the className and other props from the parent component that a DIV should receive
   const { setTheme } = useTheme();
+
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
 
   return (
     <div className={className} {...props}>

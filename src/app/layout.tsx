@@ -1,28 +1,32 @@
+import { cn } from "@/lib/utils";
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
 import Providers from "@/components/Providers";
+import Navbar from "@/components/Navbar";
+// import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pokemon Quiz",
-  description: "A quiz about Pokemon",
+  title: "Quizmify",
+  description: "Quiz yourself on anything!",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <Providers>
-        <body className={cn(inter.className, "antialiased min-h-screen pt-16")}>
+      <body className={cn(inter.className, "antialiased min-h-screen pt-16")}>
+        <Providers attribute="class" defaultTheme="system" enableSystem>
+          <Navbar />
           {children}
-        </body>
-      </Providers>
+          {/* <Toaster /> */}
+        </Providers>
+      </body>
     </html>
   );
 }
