@@ -51,6 +51,7 @@ model User {
   sessions      Session[]
 }
 
+// this an enum because we want to restrict the game types to these two, and not allow any other value
 enum GameType {
   mcq
   open_ended
@@ -75,6 +76,7 @@ model topic_count {
   count Int
 }
 
+// new model = new table
 model Question {
   id                String   @id @default(cuid())
   question          String
@@ -88,5 +90,6 @@ model Question {
 
   game Game @relation(fields: [gameId], references: [id])
 
+// by adding this, we are creating a foreign key constraint in the database that ensures that the gameId in the Question table is a valid id in the Game table
   @@index([gameId])
 }
