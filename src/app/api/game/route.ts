@@ -27,6 +27,8 @@ export async function POST(req: Request, res: Response) {
         topic,
       },
     });
+
+    // the upsert function is a prisma function that will create a new record if it doesn't exist and update the record if it does exist
     await prisma.topic_count.upsert({
       where: {
         topic,
