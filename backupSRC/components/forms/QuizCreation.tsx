@@ -1,5 +1,5 @@
 "use client";
-import { quizCreationSchema } from "@/schemas/form/quiz";
+import { quizCreationSchema } from "@/schemas/forms/quiz";
 import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -41,14 +41,13 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   const [showLoader, setShowLoader] = React.useState(false);
   const [finishedLoading, setFinishedLoading] = React.useState(false);
   const { toast } = useToast();
-  const { mutate: getQuestions, isPending } = useMutation({
+  const { mutate: getQuestions, isLoading } = useMutation({
     mutationFn: async ({ amount, topic, type }: Input) => {
       const response = await axios.post("/api/game", { amount, topic, type });
       return response.data;
     },
   });
 
-  // we're telling react-hook-form to use our zod schema to validate the form
   const form = useForm<Input>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
@@ -74,7 +73,6 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
         }
       },
       onSuccess: ({ gameId }: { gameId: string }) => {
-        console.log("gameId☀️😍😍", gameId);
         setFinishedLoading(true);
         setTimeout(() => {
           if (form.getValues("type") === "mcq") {
@@ -86,8 +84,6 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
       },
     });
   };
-
-  // this will re render the form component to reflect the change of the type of question, and see the colors of the buttons change
   form.watch();
 
   if (showLoader) {
@@ -148,7 +144,6 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
                 )}
               />
 
-              {/* Toggle button to define the type of the question */}
               <div className="flex justify-between">
                 <Button
                   variant={
@@ -176,7 +171,7 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
                   <BookOpen className="w-4 h-4 mr-2" /> Open Ended
                 </Button>
               </div>
-              <Button disabled={isPending} type="submit">
+              <Button disabled={isLoading} type="submit">
                 Submit
               </Button>
             </form>

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
-import { quizCreationSchema } from "@/schemas/form/quiz";
+import { quizCreationSchema } from "@/schemas/forms/quiz";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import axios from "axios";
@@ -8,13 +8,12 @@ import axios from "axios";
 export async function POST(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
-
     if (!session?.user) {
       return NextResponse.json(
         { error: "You must be logged in to create a game." },
         {
           status: 401,
-        },
+        }
       );
     }
     const body = await req.json();
@@ -27,8 +26,6 @@ export async function POST(req: Request, res: Response) {
         topic,
       },
     });
-
-    // the upsert function is a prisma function that will create a new record if it doesn't exist and update the record if it does exist
     await prisma.topic_count.upsert({
       where: {
         topic,
@@ -50,7 +47,7 @@ export async function POST(req: Request, res: Response) {
         amount,
         topic,
         type,
-      },
+      }
     );
 
     if (type === "mcq") {
@@ -69,7 +66,7 @@ export async function POST(req: Request, res: Response) {
           question.option2,
           question.option3,
           question.answer,
-        ].sort(() => Math.random() - 0.5); //this helps us to shuffle the options
+        ].sort(() => Math.random() - 0.5);
         return {
           question: question.question,
           answer: question.answer,
@@ -106,19 +103,18 @@ export async function POST(req: Request, res: Response) {
         { error: error.issues },
         {
           status: 400,
-        },
+        }
       );
     } else {
       return NextResponse.json(
         { error: "An unexpected error occurred." },
         {
           status: 500,
-        },
+        }
       );
     }
   }
 }
-
 export async function GET(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
@@ -127,7 +123,7 @@ export async function GET(req: Request, res: Response) {
         { error: "You must be logged in to create a game." },
         {
           status: 401,
-        },
+        }
       );
     }
     const url = new URL(req.url);
@@ -137,7 +133,7 @@ export async function GET(req: Request, res: Response) {
         { error: "You must provide a game id." },
         {
           status: 400,
-        },
+        }
       );
     }
 
@@ -154,7 +150,7 @@ export async function GET(req: Request, res: Response) {
         { error: "Game not found." },
         {
           status: 404,
-        },
+        }
       );
     }
 
@@ -162,14 +158,14 @@ export async function GET(req: Request, res: Response) {
       { game },
       {
         status: 400,
-      },
+      }
     );
   } catch (error) {
     return NextResponse.json(
       { error: "An unexpected error occurred." },
       {
         status: 500,
-      },
+      }
     );
   }
 }
