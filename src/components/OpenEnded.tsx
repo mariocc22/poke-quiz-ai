@@ -32,6 +32,7 @@ const OpenEnded = ({ game }: Props) => {
   const currentQuestion = React.useMemo(() => {
     return game.questions[questionIndex];
   }, [questionIndex, game.questions]);
+
   const { mutate: endGame } = useMutation({
     mutationFn: async () => {
       const payload: z.infer<typeof endGameSchema> = {
@@ -43,7 +44,8 @@ const OpenEnded = ({ game }: Props) => {
   });
   const { toast } = useToast();
   const [now, setNow] = React.useState(new Date());
-  const { mutate: checkAnswer, isLoading: isChecking } = useMutation({
+
+  const { mutate: checkAnswer, isPending: isChecking } = useMutation({
     mutationFn: async () => {
       let filledAnswer = blankAnswer;
       document.querySelectorAll("#user-blank-input").forEach((input) => {
@@ -92,6 +94,8 @@ const OpenEnded = ({ game }: Props) => {
       },
     });
   }, [checkAnswer, questionIndex, toast, endGame, game.questions.length]);
+
+  // this will allow the user to press the enter key to go to the next question
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.key;
