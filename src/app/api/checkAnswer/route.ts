@@ -36,6 +36,7 @@ export async function POST(req: Request, res: Response) {
         isCorrect,
       });
     } else if (question.questionType === "open_ended") {
+      // Compare the similarity of the user's answer to the correct answer and store the percentage
       let percentageSimilar = stringSimilarity.compareTwoStrings(
         question.answer.toLowerCase().trim(),
         userInput.toLowerCase().trim(),
